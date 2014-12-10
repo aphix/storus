@@ -1,0 +1,96 @@
+<html>
+	<head>
+		<!-- Open this file in a browser and edit `window.testStorus` in console to see how it works! -->
+		<!-- Check out `console-examples.js` in the same folder for examples of the Storus in action! -->
+		<title>Storus Test</title>
+		<style type="text/css">
+			table,
+			table td {
+				border: 1px solid #D0D0D0;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="debug">
+
+		</div>
+		<script src="../node_modules/lodash/dist/lodash.min.js"></script>
+		<script src="../node_modules/jquery/dist/jquery.min.js"></script>
+		<script src="../src/storus.js"></script>
+		<script type="text/template" id="debug-template">
+			<table>
+				<thead>
+					<td>Cursor</td>
+					<td>Size</td>
+					<td>Fixed Size?</td>
+					<td>Has Empty Position?</td>
+					<td>Next Empty Position</td>
+					<td>Value at Current Index</td>
+					<td colspan="3">All</td>
+				</thead>
+				<tr>
+					<td>
+						<%= cursor %>
+					</td>
+					<td>
+						<%= size %>
+					</td>
+					<td>
+						<%= fixedSize %>
+					</td>
+					<td>
+						<%= hasEmptyPosition %>
+					</td>
+					<td>
+						<%= firstEmptyPosition %>
+					</td>
+					<td>
+						<%= current %>
+					</td>
+					<td colspan="3">
+						<%= '"'+all.join('",<br />"')+'"' %>
+					</td>
+				</tr>
+			</table>
+		</script>
+		<script>
+			(function(window){
+				var libs = [
+					'$',
+					'_',
+					"Storus"
+				];
+
+				libs.forEach(function(libName){
+					if (window.hasOwnProperty(libName))
+						console.info('Loaded library: '+libName);
+					else
+						console.error('Missing library: '+libName);
+				});
+
+
+
+				var debugRefreshRate = 150;
+				var testStorus = window.testStorus = new Storus();
+
+				var updateDebug = function() {
+					var debugTemplate = $('#debug-template').html();
+
+					var storusCopy = new Storus({
+						cursor: testStorus.cursor
+					},testStorus.all);
+
+					if (testStorus.size > 0 && testStorus.fixedSize === true)
+						storusCopy.size = testStorus.size;
+
+					$('#debug').html(_.template(debugTemplate, storusCopy));
+
+					setTimeout(updateDebug,debugRefreshRate);
+				};
+
+				updateDebug();
+				console.log('Activated!');
+			})(window || {});
+		</script>
+	</body>
+</html>
